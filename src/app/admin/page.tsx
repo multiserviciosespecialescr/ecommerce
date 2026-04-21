@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase, Product } from '@/lib/supabase'
 import { AdminAuth } from '@/components/AdminAuth'
-import { Package, Plus, Pencil, Trash2, X, RefreshCw, Upload, Image as ImageIcon } from 'lucide-react'
+import { Package, Plus, Pencil, Trash2, X, RefreshCw, Upload, LayoutGrid, Search, LogOut } from 'lucide-react'
 import { CATEGORIES } from '@/lib/constants'
 
 export default function AdminPage() {
@@ -11,6 +11,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true)
   const [isEditing, setIsEditing] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   
   // Form state
   const [formData, setFormData] = useState<Partial<Product>>({})
@@ -27,6 +28,8 @@ export default function AdminPage() {
   useEffect(() => {
     fetchProducts()
   }, [])
+
+  const filteredProducts = products.filter(p => p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.category.toLowerCase().includes(searchQuery.toLowerCase()))
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -49,21 +52,13 @@ export default function AdminPage() {
       const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`
       const filePath = `uploads/${fileName}`
 
-      const { error: uploadError } = await supabase.storage
-        .from('products')
-        .upload(filePath, file)
+      const { error: uploadError } = await supabase.storage.from('products').upload(filePath, file)
+      if (uploadError) throw uploadError
 
-      if (uploadError) {
-        throw uploadError
-      }
-
-      const { data } = supabase.storage
-        .from('products')
-        .getPublicUrl(filePath)
-
+      const { data } = supabase.storage.from('products').getPublicUrl(filePath)
       return data.publicUrl
     } catch (error: any) {
-      alert('Error subiendo imagen: ' + error.message + '\n\n*Asegúrate de haber creado el Storage Bucket llamado "products" y que sea público.*')
+      alert('Error subiendo imagen: ' + error.message)
       return null
     } finally {
       setIsUploading(false)
@@ -87,26 +82,23 @@ export default function AdminPage() {
     const finalImages = [...existingImagesState, ...uploadedUrls]
 
     if (finalImages.length === 0) {
-      alert('Debes agregar al menos una imagen principal (subiéndola)')
+      alert('Debes agregar al menos una imagen')
       return
     }
     
-    // Preparar el producto a salvar
     const productData = {
       name: formData.name,
       price: Number(formData.price),
       category: formData.category || CATEGORIES[0],
-      image_url: finalImages[0], // Primera imagen es la portada obligatoria para retrocompatibilidad
-      images: finalImages,     // Array de imágenes reales
+      image_url: finalImages[0], 
+      images: finalImages,     
       stock: Number(formData.stock || 0),
       description: formData.description || null
     }
 
     if (formData.id) {
-      // Editar
       await supabase.from('products').update(productData).eq('id', formData.id)
     } else {
-      // Crear
       await supabase.from('products').insert([productData])
     }
     
@@ -118,7 +110,7 @@ export default function AdminPage() {
   }
 
   const handleDelete = async (id: string) => {
-    if (confirm('¿Seguro que deseas eliminar este producto?')) {
+    if (confirm('Se eliminará permanentemente del catálogo. ¿Deseas continuar?')) {
       await supabase.from('products').delete().eq('id', id)
       fetchProducts()
     }
@@ -127,11 +119,9 @@ export default function AdminPage() {
   const handleEdit = (product: Product) => {
     setFormData(product)
     
-    // Inicializar fotos existentes
     if (product.images && product.images.length > 0) {
       setExistingImagesState(product.images)
     } else if (product.image_url) {
-      // Migración temporal: si tiene "image_url" vieja, la pasamos al listado de fotos.
       setExistingImagesState([product.image_url])
     } else {
       setExistingImagesState([])
@@ -142,226 +132,272 @@ export default function AdminPage() {
   }
 
   const handleAdd = () => {
-    setFormData({
-      category: CATEGORIES[0],
-      price: 0,
-      stock: 1
-    })
+    setFormData({ category: CATEGORIES[0], price: 0, stock: 1 })
     setExistingImagesState([])
     setSelectedFiles([])
     setIsEditing(true)
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem('adminAuth')
+    window.location.reload()
+  }
+
   return (
     <AdminAuth>
-      <div className="max-w-5xl mx-auto p-4 sm:p-6 w-full pb-20">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-          <div className="flex items-center gap-3">
-            <div className="bg-black p-2.5 rounded-none shadow-sm shadow-black/30">
-              <Package className="w-6 h-6 text-white" />
+      <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
+        
+        {/* Sidebar Nav */}
+        <aside className="w-full md:w-64 bg-white border-r border-gray-200 flex flex-col">
+          <div className="p-6 border-b border-gray-100 flex items-center justify-between md:justify-start gap-4">
+            <div className="w-8 h-8 bg-black text-white flex items-center justify-center font-bold">V</div>
+            <span className="font-semibold text-lg tracking-tight">Ventas CRM</span>
+          </div>
+          <nav className="p-4 flex-1">
+            <ul className="space-y-1">
+              <li>
+                <div className="flex items-center gap-3 px-4 py-3 bg-gray-100 text-black font-medium text-sm rounded-lg">
+                  <LayoutGrid className="w-4 h-4" />
+                  Inventario
+                </div>
+              </li>
+            </ul>
+          </nav>
+          <div className="p-4 border-t border-gray-100">
+            <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 w-full text-left font-medium text-sm rounded-lg transition-colors">
+              <LogOut className="w-4 h-4" />
+              Cerrar Sesión
+            </button>
+          </div>
+        </aside>
+
+        {/* Workspace */}
+        <main className="flex-1 flex flex-col h-screen overflow-hidden">
+          
+          {/* Topbar */}
+          <header className="bg-white border-b border-gray-200 px-8 py-5 flex items-center justify-between sticky top-0 z-10 shrink-0">
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Gestión de Catálogo</h1>
+            <button 
+              onClick={handleAdd}
+              className="bg-black text-white px-5 py-2.5 text-sm font-semibold hover:bg-gray-800 transition-colors flex items-center gap-2 shadow-sm rounded-lg"
+            >
+              <Plus className="w-4 h-4" />
+              Crear Producto
+            </button>
+          </header>
+
+          {/* Content Area */}
+          <div className="p-8 flex-1 overflow-y-auto w-full">
+            
+            {/* Toolbar */}
+            <div className="bg-white border border-gray-200 rounded-xl p-3 mb-6 shadow-sm flex items-center gap-3">
+              <div className="flex items-center gap-3 flex-1 px-3">
+                <Search className="w-4 h-4 text-gray-400" />
+                <input 
+                  type="text" 
+                  placeholder="Buscar por nombre o categoría..." 
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  className="w-full bg-transparent border-0 focus:ring-0 outline-none text-sm"
+                />
+              </div>
+              <div className="text-xs font-semibold text-gray-400 px-4 border-l border-gray-100 uppercase tracking-widest hidden sm:block">
+                {filteredProducts.length} Artículos
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-black text-black tracking-tight">Panel de Administración</h1>
+
+            {/* Table */}
+            <div className="bg-white border border-gray-200 shadow-sm rounded-xl overflow-hidden">
+              {loading ? (
+                <div className="p-20 text-center text-gray-400 flex flex-col items-center">
+                  <RefreshCw className="w-6 h-6 animate-spin mb-4 text-black" />
+                  Sincronizando con base de datos...
+                </div>
+              ) : filteredProducts.length === 0 ? (
+                <div className="p-24 text-center">
+                  <Package className="w-12 h-12 text-gray-200 mx-auto mb-4" />
+                  <p className="mb-4 text-gray-500 font-medium">No se encontraron productos.</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-gray-50/50 border-b border-gray-200 text-gray-400 text-xs font-bold uppercase tracking-widest">
+                        <th className="p-5">Artículo Principal</th>
+                        <th className="p-5 text-right w-32">Precio</th>
+                        <th className="p-5 text-center w-32">Inventario</th>
+                        <th className="p-5 w-40">Categoría</th>
+                        <th className="p-5 text-center w-24">Ajustes</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {filteredProducts.map(product => (
+                        <tr key={product.id} className="hover:bg-gray-50/50 transition-colors group">
+                          <td className="p-5">
+                            <div className="flex items-center gap-4">
+                              <div className="relative shrink-0">
+                                <img src={product.image_url} alt="" className="w-10 h-10 object-cover rounded-md border border-gray-200 bg-white" />
+                                {product.images && product.images.length > 1 && (
+                                  <div className="absolute -top-1.5 -right-1.5 bg-black text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-sm">{product.images.length}</div>
+                                )}
+                              </div>
+                              <div className="font-semibold text-sm text-gray-900 line-clamp-2">{product.name}</div>
+                            </div>
+                          </td>
+                          <td className="p-5 text-right font-medium text-gray-900 text-sm">
+                            ₡{product.price.toLocaleString()}
+                          </td>
+                          <td className="p-5 text-center">
+                            <span className={`inline-flex items-center justify-center min-w-[3rem] px-2.5 py-1 text-xs font-bold rounded-full border ${product.stock <= 0 ? 'border-red-200 text-red-700 bg-red-50' : product.stock <= 5 ? 'border-orange-200 text-orange-700 bg-orange-50' : 'border-green-200 text-green-700 bg-green-50'}`}>
+                              {product.stock}
+                            </span>
+                          </td>
+                          <td className="p-5 text-gray-500 text-xs font-medium">
+                            {product.category}
+                          </td>
+                          <td className="p-5">
+                            <div className="flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <button onClick={() => handleEdit(product)} className="p-2 text-gray-400 hover:text-black hover:bg-gray-100 rounded-md transition-colors" title="Editar">
+                                <Pencil className="w-4 h-4" />
+                              </button>
+                              <button onClick={() => handleDelete(product.id)} className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors" title="Eliminar">
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           </div>
-          <button 
-            onClick={handleAdd}
-            className="bg-black hover:bg-gray-800 text-white px-5 py-2.5 rounded-none font-medium shadow-sm transition-all flex items-center gap-2"
-          >
-            <Plus className="w-5 h-5" />
-            Nuevo Producto
-          </button>
-        </div>
+        </main>
 
-        {/* Modal de Edición */}
+        {/* Slide-over Drawer para Edición */}
         {isEditing && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-none shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-              <div className="flex justify-between items-center p-6 border-b border-gray-100">
-                <h2 className="text-xl font-bold text-black tracking-tight">{formData.id ? 'Editar Producto' : 'Crear Producto'}</h2>
-                <button onClick={() => setIsEditing(false)} className="text-gray-400 hover:text-black transition-colors">
-                  <X className="w-6 h-6" />
+          <>
+            <div className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-40 transition-opacity" onClick={() => setIsEditing(false)} />
+            <div className="fixed inset-y-0 right-0 z-50 w-full max-w-xl bg-white shadow-2xl flex flex-col border-l border-gray-200 animate-in slide-in-from-right duration-300">
+              
+              <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gray-50/50">
+                <h2 className="text-xl font-bold text-gray-900 tracking-tight">{formData.id ? 'Editor de Producto' : 'Nuevo Producto'}</h2>
+                <button onClick={() => setIsEditing(false)} className="text-gray-400 hover:text-gray-900 bg-white shadow-sm border border-gray-200 p-2 rounded-full transition-all">
+                  <X className="w-5 h-5" />
                 </button>
               </div>
-              <form onSubmit={handleSave} className="p-6 space-y-6">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">Nombre</label>
-                  <input required type="text" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full border-0 border-b border-gray-200 bg-transparent px-0 py-2 focus:ring-0 focus:border-black outline-none transition-colors" />
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">Precio (₡)</label>
-                    <input required min="0" type="number" value={formData.price ?? ''} onChange={e => setFormData({...formData, price: Number(e.target.value)})} className="w-full border-0 border-b border-gray-200 bg-transparent px-0 py-2 focus:ring-0 focus:border-black outline-none transition-colors" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">Stock</label>
-                    <input required min="0" type="number" value={formData.stock ?? ''} onChange={e => setFormData({...formData, stock: Number(e.target.value)})} className="w-full border-0 border-b border-gray-200 bg-transparent px-0 py-2 focus:ring-0 focus:border-black outline-none transition-colors" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">Categoría</label>
-                    <div className="relative">
+
+              <div className="flex-1 overflow-y-auto">
+                <form id="product-form" onSubmit={handleSave} className="p-6 space-y-8">
+                  
+                  {/* Seccion 1 */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-bold text-gray-900">1. Información General</h3>
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Nombre Comercial</label>
+                      <input required type="text" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full border border-gray-200 bg-gray-50 rounded-lg px-4 py-3 focus:ring-2 focus:ring-black outline-none transition-all text-sm font-medium text-gray-900" placeholder="Ej. Zapatillas Nike Air" />
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Precio (₡)</label>
+                        <input required min="0" type="number" value={formData.price ?? ''} onChange={e => setFormData({...formData, price: Number(e.target.value)})} className="w-full border border-gray-200 bg-gray-50 rounded-lg px-4 py-3 focus:ring-2 focus:ring-black outline-none transition-all text-sm font-medium text-gray-900" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Stock Disp.</label>
+                        <input required min="0" type="number" value={formData.stock ?? ''} onChange={e => setFormData({...formData, stock: Number(e.target.value)})} className="w-full border border-gray-200 bg-gray-50 rounded-lg px-4 py-3 focus:ring-2 focus:ring-black outline-none transition-all text-sm font-medium text-gray-900" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Categoría</label>
                       <select 
                         required 
                         value={formData.category || CATEGORIES[0]} 
                         onChange={e => setFormData({...formData, category: e.target.value})} 
-                        className="w-full border-0 border-b border-gray-200 bg-transparent px-0 py-2 focus:ring-0 focus:border-black outline-none transition-colors appearance-none"
+                        className="w-full border border-gray-200 bg-gray-50 rounded-lg px-4 py-3 focus:ring-2 focus:ring-black outline-none transition-all text-sm font-medium text-gray-900"
                       >
                         {CATEGORIES.map(c => (
                           <option key={c} value={c}>{c}</option>
                         ))}
                       </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
-                        <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">Galería del Producto</label>
-                  
-                  {/* Selector Múltiple */}
-                  <div className="border border-dashed border-gray-300 p-6 text-center hover:border-black transition-colors cursor-pointer bg-gray-50 mb-4">
-                    <input 
-                      type="file" 
-                      accept="image/*"
-                      multiple
-                      id="image-upload"
-                      className="hidden"
-                      onChange={handleFileChange}
-                    />
-                    <label htmlFor="image-upload" className="cursor-pointer flex flex-col items-center gap-3">
-                      <div className="bg-black w-10 h-10 flex items-center justify-center">
-                        <Upload className="text-white w-5 h-5" />
-                      </div>
-                      <span className="text-sm font-semibold text-black tracking-wide">Haz clic para subir fotos</span>
-                      <span className="text-xs text-gray-500 font-light">Puedes seleccionar varias (PNG, JPG)</span>
-                    </label>
-                  </div>
-                  
-                  {/* Vista Previa Conjunta */}
-                  {(existingImagesState.length > 0 || selectedFiles.length > 0) && (
-                    <div className="flex flex-wrap gap-3">
-                      {/* Fotos ya en la nube */}
-                      {existingImagesState.map((imgUrl, idx) => (
-                        <div key={`exist-${idx}`} className="relative w-16 h-16 group border border-gray-200">
-                          <img src={imgUrl} alt="Old" className="w-full h-full object-cover" />
-                          <button type="button" onClick={() => removeExistingImage(idx)} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <X className="w-3 h-3" />
-                          </button>
+                  <hr className="border-gray-100" />
+
+                  {/* Seccion 2 */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-bold text-gray-900">2. Galería Visual</h3>
+                    
+                    <div className="border-2 border-dashed border-gray-200 p-8 text-center rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer group">
+                      <input type="file" accept="image/*" multiple id="image-upload" className="hidden" onChange={handleFileChange} />
+                      <label htmlFor="image-upload" className="cursor-pointer flex flex-col items-center gap-3">
+                        <div className="bg-white p-3 rounded-full shadow-sm border border-gray-200 group-hover:scale-110 transition-transform">
+                          <Upload className="text-gray-900 w-5 h-5" />
                         </div>
-                      ))}
-                      
-                      {/* Fotos nuevas esperando guardar */}
-                      {selectedFiles.map((file, idx) => (
-                        <div key={`new-${idx}`} className="relative w-16 h-16 group border border-black opacity-80">
-                          <img src={URL.createObjectURL(file)} alt="New" className="w-full h-full object-cover grayscale" />
-                          <div className="absolute inset-0 flex items-center justify-center text-[8px] uppercase tracking-widest font-bold text-white bg-black/40 text-center">Nuevo</div>
-                          <button type="button" onClick={() => removeSelectedFile(idx)} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <X className="w-3 h-3" />
-                          </button>
-                        </div>
-                      ))}
+                        <span className="text-sm font-semibold text-gray-900">Seleccionar fotografías</span>
+                        <span className="text-xs text-gray-500 font-medium">Arrastra o elige (PNG, JPG, WEBP)</span>
+                      </label>
                     </div>
-                  )}
-
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">Descripción (Opcional)</label>
-                  <textarea rows={3} value={formData.description || ''} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full border-0 border-b border-gray-200 bg-transparent px-0 py-2 focus:ring-0 focus:border-black outline-none transition-colors"></textarea>
-                </div>
-                
-                <div className="pt-6 flex gap-4">
-                  <button type="button" onClick={() => setIsEditing(false)} className="flex-1 bg-white border border-gray-200 text-black font-semibold text-xs tracking-widest uppercase hover:border-black py-4 transition-colors">
-                    Descartar
-                  </button>
-                  <button 
-                    type="submit" 
-                    disabled={isUploading}
-                    className="flex-1 bg-black hover:bg-gray-900 disabled:bg-gray-400 text-white font-semibold text-xs tracking-widest uppercase py-4 transition-all flex justify-center items-center gap-2"
-                  >
-                    {isUploading ? (
-                      <><RefreshCw className="w-4 h-4 animate-spin" /> Procesando...</>
-                    ) : (
-                      'Publicar Producto'
-                    )}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {/* Lista de productos */}
-        <div className="bg-white border border-gray-200 shadow-sm overflow-hidden rounded-none">
-          {loading ? (
-            <div className="p-12 text-center text-gray-400 flex flex-col items-center">
-              <RefreshCw className="w-6 h-6 animate-spin mb-4 text-black" />
-              Cargando catálogo...
-            </div>
-          ) : products.length === 0 ? (
-            <div className="p-16 text-center">
-              <p className="mb-6 text-gray-400 font-light">Inventario vacío por el momento.</p>
-              <button onClick={handleAdd} className="text-black font-semibold uppercase tracking-widest text-xs border-b border-black pb-1 hover:text-gray-500 transition-colors">
-                Ingresar un Artículo
-              </button>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-gray-50 border-b border-gray-200 text-gray-500 text-xs font-semibold uppercase tracking-wider">
-                    <th className="p-4">Producto</th>
-                    <th className="p-4 text-right">Precio</th>
-                    <th className="p-4 text-center">Unidades</th>
-                    <th className="p-4">Categoría</th>
-                    <th className="p-4 text-center mt-auto">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {products.map(product => (
-                    <tr key={product.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="p-4">
-                        <div className="flex items-center gap-4">
-                          <div className="relative">
-                            <img src={product.image_url} alt="" className="w-12 h-16 object-cover bg-gray-100 border border-gray-200" />
-                            {product.images && product.images.length > 1 && (
-                              <div className="absolute -bottom-2 -right-2 bg-black text-white text-[9px] font-bold px-1.5 py-0.5 pointer-events-none">+{product.images.length - 1}</div>
-                            )}
+                    
+                    {(existingImagesState.length > 0 || selectedFiles.length > 0) && (
+                      <div className="bg-white border border-gray-100 p-4 rounded-xl flex flex-wrap gap-3">
+                        {existingImagesState.map((imgUrl, idx) => (
+                          <div key={`exist-${idx}`} className="relative w-24 h-24 group rounded-md overflow-hidden bg-gray-100">
+                            <img src={imgUrl} alt="Old" className="w-full h-full object-cover" />
+                            {idx === 0 && <div className="absolute bottom-0 left-0 right-0 bg-black/80 text-white text-[8px] text-center font-bold py-1 uppercase">Principal</div>}
+                            <button type="button" onClick={() => removeExistingImage(idx)} className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition-opacity">
+                              <X className="w-3 h-3" />
+                            </button>
                           </div>
-                          <div className="font-semibold text-sm text-black line-clamp-1">{product.name}</div>
-                        </div>
-                      </td>
-                      <td className="p-4 text-right font-semibold text-black whitespace-nowrap text-sm">
-                        ₡{product.price.toLocaleString()}
-                      </td>
-                      <td className="p-4 text-center">
-                        <span className={`px-2 py-1 text-xs font-bold tracking-widest uppercase border ${product.stock <= 0 ? 'border-red-200 text-red-600 bg-red-50' : product.stock <= 5 ? 'border-orange-200 text-orange-600 bg-orange-50' : 'border-gray-200 text-gray-600 bg-gray-50'}`}>
-                          {product.stock}
-                        </span>
-                      </td>
-                      <td className="p-4 text-gray-400 text-xs tracking-widest uppercase">
-                        {product.category}
-                      </td>
-                      <td className="p-4">
-                        <div className="flex items-center justify-center gap-3">
-                          <button onClick={() => handleEdit(product)} className="text-gray-400 hover:text-black transition-colors" title="Editar">
-                            <Pencil className="w-4 h-4" />
-                          </button>
-                          <button onClick={() => handleDelete(product.id)} className="text-red-300 hover:text-red-600 transition-colors" title="Eliminar">
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                        ))}
+                        
+                        {selectedFiles.map((file, idx) => (
+                          <div key={`new-${idx}`} className="relative w-24 h-24 group rounded-md overflow-hidden bg-gray-100 border-2 border-green-500">
+                            <img src={URL.createObjectURL(file)} alt="New" className="w-full h-full object-cover opacity-80" />
+                            <div className="absolute top-1 left-1 bg-green-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-sm">NUEVA</div>
+                            <button type="button" onClick={() => removeSelectedFile(idx)} className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 shadow-md opacity-0 group-hover:opacity-100 transition-opacity">
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <hr className="border-gray-100" />
+
+                  {/* Seccion 3 */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-bold text-gray-900">3. Detalles y Reseña</h3>
+                    <textarea rows={4} value={formData.description || ''} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full border border-gray-200 bg-gray-50 rounded-lg px-4 py-3 focus:ring-2 focus:ring-black outline-none transition-all text-sm text-gray-900" placeholder="Redacta la descripción, beneficios, materiales o composición del producto..."></textarea>
+                  </div>
+                </form>
+              </div>
+
+              {/* Drawer Footer Actions */}
+              <div className="p-6 border-t border-gray-100 bg-white grid grid-cols-2 gap-4 shrink-0">
+                <button type="button" onClick={() => setIsEditing(false)} className="w-full bg-gray-50 border border-gray-200 text-gray-700 font-semibold text-sm rounded-lg py-3.5 hover:bg-gray-100 transition-colors">
+                  Cancelar
+                </button>
+                <button 
+                  type="submit" 
+                  form="product-form"
+                  disabled={isUploading}
+                  className="w-full bg-black hover:bg-gray-800 disabled:bg-gray-400 text-white shadow-md font-semibold text-sm rounded-lg py-3.5 transition-all flex justify-center items-center gap-2"
+                >
+                  {isUploading ? (
+                    <><RefreshCw className="w-4 h-4 animate-spin" /> Guardando...</>
+                  ) : (
+                    'Guardar Todo'
+                  )}
+                </button>
+              </div>
             </div>
-          )}
-        </div>
+          </>
+        )}
       </div>
     </AdminAuth>
   )
