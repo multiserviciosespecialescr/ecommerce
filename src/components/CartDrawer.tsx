@@ -100,7 +100,8 @@ export function CartDrawer() {
                       <span className="text-sm font-medium w-4 text-center">{item.quantity}</span>
                       <button 
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="text-gray-500 hover:text-indigo-600 transition-colors"
+                        disabled={item.quantity >= item.stock}
+                        className={`transition-colors ${item.quantity >= item.stock ? 'text-gray-300 cursor-not-allowed' : 'text-gray-500 hover:text-indigo-600'}`}
                       >
                         <Plus className="w-4 h-4" />
                       </button>

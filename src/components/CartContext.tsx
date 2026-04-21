@@ -49,6 +49,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const addItem = (product: Product, quantity = 1) => {
     setItems(currentItems => {
       const existingItem = currentItems.find(item => item.id === product.id)
+      const currentQuantity = existingItem ? existingItem.quantity : 0
+
+      if (currentQuantity + quantity > product.stock) {
+        alert(`Solo tenemos ${product.stock} unidades disponibles de este producto.`)
+        return currentItems
+      }
+
       if (existingItem) {
         return currentItems.map(item =>
           item.id === product.id
@@ -71,9 +78,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return
     }
     setItems(currentItems =>
-      currentItems.map(item =>
-        item.id === productId ? { ...item, quantity } : item
-      )
+      currentItems.map(item => {
+        if (item.id === productId) {
+          if (quantity > item.stock) {
+            alert(`Límite de stock alcanzado (${item.stock} unidades).`)
+            return { ...item, quantity: item.stock }
+          }
+          return { ...item, quantity }
+        }
+        return item
+      })
     )
   }
 

@@ -83,6 +83,7 @@ export default function AdminPage() {
       price: Number(formData.price),
       category: formData.category || CATEGORIES[0],
       image_url: imageUrlToSave,
+      stock: Number(formData.stock || 0),
       description: formData.description || null
     }
 
@@ -116,7 +117,8 @@ export default function AdminPage() {
   const handleAdd = () => {
     setFormData({
       category: CATEGORIES[0],
-      price: 0
+      price: 0,
+      stock: 1
     })
     setSelectedFile(null)
     setIsEditing(true)
@@ -159,10 +161,14 @@ export default function AdminPage() {
                   <input required type="text" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-600 outline-none" />
                 </div>
                 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Precio (₡)</label>
-                    <input required type="number" value={formData.price || ''} onChange={e => setFormData({...formData, price: Number(e.target.value)})} className="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-600 outline-none" />
+                    <input required min="0" type="number" value={formData.price ?? ''} onChange={e => setFormData({...formData, price: Number(e.target.value)})} className="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-600 outline-none" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
+                    <input required min="0" type="number" value={formData.stock ?? ''} onChange={e => setFormData({...formData, stock: Number(e.target.value)})} className="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-indigo-600 outline-none" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
@@ -268,6 +274,7 @@ export default function AdminPage() {
                   <tr className="bg-gray-50 border-b border-gray-100 text-gray-600 text-sm uppercase tracking-wider">
                     <th className="p-4 font-semibold">Producto</th>
                     <th className="p-4 font-semibold text-right">Precio</th>
+                    <th className="p-4 font-semibold text-center">Stock</th>
                     <th className="p-4 font-semibold">Categoría</th>
                     <th className="p-4 font-semibold text-center mt-auto">Acciones</th>
                   </tr>
@@ -283,6 +290,11 @@ export default function AdminPage() {
                       </td>
                       <td className="p-4 text-right font-medium text-indigo-600 whitespace-nowrap">
                         ₡{product.price.toLocaleString()}
+                      </td>
+                      <td className="p-4 text-center">
+                        <span className={`px-2.5 py-1 rounded-md text-xs font-semibold ${product.stock <= 0 ? 'bg-red-50 text-red-600' : product.stock <= 5 ? 'bg-orange-50 text-orange-600' : 'bg-green-50 text-green-600'}`}>
+                          {product.stock}
+                        </span>
                       </td>
                       <td className="p-4 text-gray-500 text-sm">
                         <span className="bg-gray-100 px-2.5 py-1 rounded-md text-xs font-semibold">{product.category}</span>

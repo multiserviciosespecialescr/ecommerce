@@ -7,6 +7,7 @@ export type Product = {
   image_url: string
   category: string
   description?: string
+  stock: number
   created_at: string
 }
 

@@ -55,17 +55,33 @@ export function ProductCard({ product }: ProductCardProps) {
         {!product.description && <div className="flex-1" />}
 
         <div className="mt-auto">
-          <div className="text-2xl font-black text-indigo-600 mb-4">
-            ₡{product.price.toLocaleString()}
+          <div className="flex justify-between items-baseline mb-4">
+            <div className="text-2xl font-black text-indigo-600">
+              ₡{product.price.toLocaleString()}
+            </div>
+            {product.stock <= 0 ? (
+              <span className="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded-md">
+                Agotado
+              </span>
+            ) : product.stock <= 5 ? (
+              <span className="text-xs font-bold text-orange-600 bg-orange-50 px-2 py-1 rounded-md">
+                Poco Stock
+              </span>
+            ) : null}
           </div>
 
           <div className="flex flex-col gap-2">
             <button
               onClick={() => addItem(product)}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+              disabled={product.stock <= 0}
+              className={`w-full font-medium py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2 ${
+                product.stock <= 0 
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                  : 'bg-indigo-600 hover:bg-indigo-700 text-white'
+              }`}
             >
               <ShoppingBag className="w-4 h-4" />
-              Agregar al carrito
+              {product.stock <= 0 ? 'Sin stock' : 'Agregar al carrito'}
             </button>
             <button
               onClick={handleInterested}
