@@ -18,7 +18,6 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative px-6 py-32 lg:py-48 flex items-center justify-center text-center">
         <div className="max-w-4xl mx-auto">
-          <p className="text-xs font-semibold tracking-[0.2em] text-gray-400 uppercase mb-6">Selección Curada</p>
           <h1 className="text-5xl sm:text-6xl md:text-8xl font-bold text-black tracking-tighter leading-[1.05] mb-8">
             Simplicidad en cada compra.
           </h1>
@@ -93,6 +92,9 @@ export default function Home() {
       <section className="py-32 px-6 border-t border-gray-100 bg-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-black mb-8 tracking-tighter">¿Buscas algo específico?</h2>
+          <p className="mt-6 text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed font-light mb-12">
+            Si tienes algo específico en mente y quieres una cotización ágil, escríbenos dándole un toque al botón de acá abajo.
+          </p>
           <button 
             onClick={handleCustomQuote}
             className="bg-black text-white px-12 py-5 font-medium text-sm tracking-wide transition-all hover:bg-gray-900 rounded-none border border-black inline-flex items-center gap-3"
