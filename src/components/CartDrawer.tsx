@@ -3,9 +3,13 @@
 import React from 'react'
 import { X, Minus, Plus, ShoppingBag } from 'lucide-react'
 import { useCart } from './CartContext'
+import { usePathname } from 'next/navigation'
 
 export function CartDrawer() {
   const { isCartOpen, setIsCartOpen, items, updateQuantity, removeItem, totalPrice } = useCart()
+  const pathname = usePathname()
+
+  if (pathname.startsWith('/admin')) return null
 
   // Generate WA Checkout Message
   const handleCheckout = () => {

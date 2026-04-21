@@ -2,9 +2,13 @@
 
 import React from 'react'
 import { MessageCircle } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 
 export function GlobalAction() {
   const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || ''
+  const pathname = usePathname()
+
+  if (pathname.startsWith('/admin')) return null
 
   const handleGeneralQuestion = () => {
     if (!phoneNumber) {

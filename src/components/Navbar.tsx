@@ -3,9 +3,13 @@
 import Link from 'next/link'
 import { ShoppingBag } from 'lucide-react'
 import { useCart } from './CartContext'
+import { usePathname } from 'next/navigation'
 
 export function Navbar() {
   const { totalItems, setIsCartOpen } = useCart()
+  const pathname = usePathname()
+
+  if (pathname.startsWith('/admin')) return null
 
   return (
     <nav className="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-xl border-b border-gray-100">
