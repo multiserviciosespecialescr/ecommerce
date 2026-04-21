@@ -8,7 +8,7 @@ export default function Home() {
     const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || ''
     if (!phoneNumber) return alert('Número no configurado en entorno')
     
-    const msg = encodeURIComponent('Hola, me gustaría consultar por un producto que no muesta el catálogo:\n\n- Descripción:\n- Presupuesto:\n')
+    const msg = encodeURIComponent('Hola, me gustaría consultar por un producto que no muestra el catálogo:\n\n- Descripción:\n- Presupuesto:\n')
     window.open(`https://wa.me/${phoneNumber}?text=${msg}`, '_blank')
   }
 

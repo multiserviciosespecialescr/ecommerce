@@ -18,10 +18,10 @@ export function Navbar() {
           {/* Logo Section */}
           <Link href="/" className="flex items-center gap-3 group">
             <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center transition-transform group-hover:scale-95">
-              <span className="text-white font-medium text-sm leading-none">V</span>
+              <span className="text-white font-medium text-xs leading-none">LB</span>
             </div>
             <span className="font-semibold text-xl tracking-tight text-gray-900">
-              Ventas
+              Lo Buscamos
             </span>
           </Link>
 

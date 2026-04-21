@@ -9,7 +9,7 @@ import { GlobalAction } from '@/components/GlobalAction'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Catálogo de Productos',
+  title: 'Lo Buscamos - Catálogo',
   description: 'Catálogo de productos con integración a WhatsApp',
 }
 
