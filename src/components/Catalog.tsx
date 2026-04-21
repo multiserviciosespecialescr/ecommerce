@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import { Product } from '@/lib/supabase'
 import { ProductCard } from './ProductCard'
-import { PackageOpen, AlertCircle, ShoppingCart } from 'lucide-react'
+import { PackageOpen, AlertCircle, ShoppingCart, Search, Filter } from 'lucide-react'
 import { CATEGORIES } from '@/lib/constants'
 
 interface CatalogProps {
@@ -13,15 +13,30 @@ interface CatalogProps {
 
 export function Catalog({ initialProducts, dbError }: CatalogProps) {
   const [activeCategory, setActiveCategory] = useState<string>('Todos')
-
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  
   // Usar categorías fijas
   const categories = ['Todos', ...CATEGORIES]
 
+  // Rango máximo de precios dinámico basado en inventario real
+  const maxPossiblePrice = useMemo(() => {
+    return initialProducts.length > 0 ? Math.max(...initialProducts.map(p => p.price)) : 100000
+  }, [initialProducts])
+
+  const [selectedMaxPrice, setSelectedMaxPrice] = useState<number | null>(null)
+  const currentMaxPrice = selectedMaxPrice !== null ? selectedMaxPrice : maxPossiblePrice
+
   // Filtrar productos
   const filteredProducts = useMemo(() => {
-    if (activeCategory === 'Todos') return initialProducts
-    return initialProducts.filter(p => p.category === activeCategory)
-  }, [initialProducts, activeCategory])
+    return initialProducts.filter(p => {
+      const matchCategory = activeCategory === 'Todos' || p.category === activeCategory
+      const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          (p.description?.toLowerCase().includes(searchQuery.toLowerCase()))
+      const matchPrice = p.price <= currentMaxPrice
+      
+      return matchCategory && matchSearch && matchPrice
+    })
+  }, [initialProducts, activeCategory, searchQuery, currentMaxPrice])
 
   if (dbError) {
     return (
@@ -53,22 +68,81 @@ export function Catalog({ initialProducts, dbError }: CatalogProps) {
 
   return (
     <div>
-      {/* Filtro de Categorías */}
-      <div className="bg-white p-2 rounded-2xl shadow-lg shadow-gray-200/40 border border-gray-100 mb-8 inline-flex flex-wrap gap-2 justify-center lg:justify-start w-full lg:w-auto">
-        {categories.map(category => (
-          <button
-            key={category}
-            onClick={() => setActiveCategory(category)}
-            className={`px-6 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 ${
-              activeCategory === category
-                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            {category}
-          </button>
-        ))}
+      {/* Barra de Filtros y Búsqueda */}
+      <div className="bg-white p-4 lg:p-5 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 mb-10 flex flex-col lg:flex-row gap-5 items-center">
+        
+        {/* Buscador */}
+        <div className="relative w-full lg:w-1/3">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input 
+            type="text" 
+            placeholder="Buscar por nombre..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-12 pr-4 py-3.5 bg-gray-50 hover:bg-gray-100 focus:bg-white border border-transparent focus:border-indigo-300 rounded-2xl focus:ring-4 focus:ring-indigo-100 outline-none transition-all font-medium text-gray-700 placeholder-gray-400"
+          />
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-5 w-full lg:w-2/3">
+          {/* Categoría (Select) */}
+          <div className="relative w-full sm:w-1/2">
+            <select 
+              value={activeCategory} 
+              onChange={(e) => setActiveCategory(e.target.value)}
+              className="w-full pl-5 pr-10 py-3.5 bg-gray-50 hover:bg-gray-100 focus:bg-white border border-transparent focus:border-indigo-300 rounded-2xl appearance-none focus:ring-4 focus:ring-indigo-100 outline-none font-semibold text-gray-700 transition-all cursor-pointer"
+            >
+              {categories.map(c => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-5 text-gray-400">
+               <svg className="h-5 w-5 fill-current" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </div>
+            <div className="absolute -top-2.5 left-4 bg-white px-2 text-[10px] uppercase tracking-wider font-bold text-indigo-600 rounded-full shadow-sm border border-indigo-100">
+              Categoría
+            </div>
+          </div>
+
+          {/* Filtro de Precio */}
+          <div className="w-full sm:w-1/2 bg-gray-50 rounded-2xl px-5 py-2 border border-transparent hover:border-gray-200 transition-all flex flex-col justify-center relative">
+            <div className="absolute -top-2.5 left-4 bg-white px-2 text-[10px] uppercase tracking-wider font-bold text-green-600 rounded-full shadow-sm border border-green-100">
+              Precio Máximo
+            </div>
+            <div className="flex justify-between items-center text-sm font-bold text-gray-700 mb-1 mt-1">
+               <span>₡0</span>
+               <span className="text-green-600 bg-green-100 px-2.5 py-0.5 rounded-md">₡{currentMaxPrice.toLocaleString()}</span>
+            </div>
+            <input 
+              type="range"
+              min="0"
+              max={maxPossiblePrice}
+              step="1000"
+              value={currentMaxPrice}
+              onChange={(e) => setSelectedMaxPrice(Number(e.target.value))}
+              className="w-full accent-green-500 cursor-pointer h-2 bg-gray-200 rounded-lg appearance-none"
+            />
+          </div>
+        </div>
       </div>
+
+      {/* Resultado Vacio */}
+      {filteredProducts.length === 0 && (
+        <div className="py-20 text-center text-gray-500">
+          <Filter className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-xl font-bold text-gray-900 mb-2">No hay resultados</h3>
+          <p>Intenta ajustar los filtros de búsqueda, categoría o precio.</p>
+          <button 
+            onClick={() => {
+              setSearchQuery('')
+              setActiveCategory('Todos')
+              setSelectedMaxPrice(null)
+            }}
+            className="mt-6 text-indigo-600 font-semibold hover:underline"
+          >
+            Limpiar todos los filtros
+          </button>
+        </div>
+      )}
 
       {/* Grilla de Productos */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
