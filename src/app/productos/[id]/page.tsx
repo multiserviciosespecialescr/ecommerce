@@ -7,12 +7,14 @@ import { ProductClientRenderer } from './ProductClientRenderer'
 // Refrescamos rápido para que si cambia su precio/stock no se quede viejo
 export const revalidate = 0
 
-export default async function ProductPage({ params }: { params: { id: string } }) {
+export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+
   // 1. Fetch de Supabase desde el Servidor
   const { data: product, error } = await supabase
     .from('products')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (error || !product) {
