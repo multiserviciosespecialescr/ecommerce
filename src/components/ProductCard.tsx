@@ -3,6 +3,7 @@
 import { Product } from '@/lib/supabase'
 import { useCart } from './CartContext'
 import { MessageCircle } from 'lucide-react'
+import Link from 'next/link'
 
 interface ProductCardProps {
   product: Product
@@ -22,7 +23,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <div className="group flex flex-col h-full border border-transparent hover:border-gray-100 p-2 lg:p-4 transition-all duration-300">
       {/* Image Container */}
-      <div className="relative aspect-[4/5] overflow-hidden bg-gray-50 mb-4 rounded-none">
+      <Link href={`/productos/${product.id}`} className="relative aspect-[4/5] overflow-hidden bg-gray-50 mb-4 rounded-none block">
         {product.image_url ? (
           <img 
             src={product.image_url} 
@@ -49,14 +50,14 @@ export function ProductCard({ product }: ProductCardProps) {
             </span>
           )}
         </div>
-      </div>
+      </Link>
 
       {/* Info Content */}
       <div className="flex flex-col flex-1">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="font-medium text-black text-sm pr-4 line-clamp-2">
+          <Link href={`/productos/${product.id}`} className="font-medium text-black text-sm pr-4 line-clamp-2 hover:underline">
             {product.name}
-          </h3>
+          </Link>
           <span className="text-sm text-black font-semibold whitespace-nowrap">
             ₡{product.price.toLocaleString()}
           </span>
