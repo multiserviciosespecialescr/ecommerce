@@ -111,10 +111,11 @@ export function ProductClientRenderer({ product }: { product: Product }) {
           
           <button
             onClick={handleInterested}
-            className="flex-1 py-4 text-xs tracking-widest uppercase font-semibold transition-colors bg-white border border-gray-200 text-black hover:border-black flex items-center justify-center gap-3"
+            className="flex-1 py-4 text-xs tracking-widest uppercase font-semibold transition-all flex items-center justify-center gap-3 text-white hover:brightness-110"
+            style={{ backgroundColor: '#007bff' }}
           >
             <MessageCircle className="w-4 h-4" />
-            Consulta Tallas
+            Pedir o Consultar
           </button>
         </div>
       </div>

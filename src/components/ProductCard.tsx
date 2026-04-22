@@ -87,10 +87,11 @@ export function ProductCard({ product }: ProductCardProps) {
           
           <button
             onClick={handleInterested}
-            className="w-full py-3.5 text-xs tracking-widest uppercase font-semibold transition-colors bg-white border border-gray-200 text-black hover:border-black rounded-none flex items-center justify-center gap-2"
+            className="w-full py-3.5 text-xs tracking-widest uppercase font-semibold transition-all rounded-none flex items-center justify-center gap-2 text-white hover:brightness-110"
+            style={{ backgroundColor: '#007bff' }}
           >
             <MessageCircle className="w-4 h-4" />
-            Consulta
+            Pedir por WhatsApp
           </button>
         </div>
       </div>

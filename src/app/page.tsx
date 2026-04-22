@@ -34,10 +34,11 @@ export default function Home() {
             </Link>
             <button 
               onClick={handleCustomQuote}
-              className="w-full sm:w-auto bg-transparent hover:bg-gray-50 text-black border border-gray-200 px-10 py-4 font-medium text-sm tracking-wide transition-all rounded-none flex items-center justify-center gap-3"
+              className="w-full sm:w-auto text-white px-10 py-4 font-medium text-sm tracking-wide transition-all hover:brightness-110 rounded-none flex items-center justify-center gap-3"
+              style={{ backgroundColor: '#007bff' }}
             >
               <Search className="w-4 h-4" />
-              Solicitud Especial
+              Pide lo que no hay aquí
             </button>
           </div>
         </div>
@@ -91,15 +92,16 @@ export default function Home() {
       {/* CTA Final */}
       <section className="py-32 px-6 border-t border-gray-100 bg-white">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-black mb-8 tracking-tighter">¿Buscas algo específico?</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-black mb-8 tracking-tighter">¿No ves lo que buscas?</h2>
           <p className="mt-6 text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed font-light mb-12">
-            Si tienes algo específico en mente y quieres una cotización ágil, escríbenos dándole un toque al botón de acá abajo.
+            Nuestra tienda no tiene todo, <span className="font-semibold text-black">pero lo conseguimos.</span> Escríbenos por WhatsApp con el producto que quieres, su descripción o un presupuesto y te cotizamos al instante.
           </p>
           <button 
             onClick={handleCustomQuote}
-            className="bg-black text-white px-12 py-5 font-medium text-sm tracking-wide transition-all hover:bg-gray-900 rounded-none border border-black inline-flex items-center gap-3"
+            className="text-white px-12 py-5 font-semibold text-sm tracking-wide transition-all hover:brightness-110 rounded-none inline-flex items-center gap-3 shadow-lg"
+            style={{ backgroundColor: '#007bff', boxShadow: '0 8px 30px rgba(0,123,255,0.3)' }}
           >
-            Hablemos por WhatsApp
+            Cotiza tu pedido por WhatsApp
           </button>
         </div>
       </section>
