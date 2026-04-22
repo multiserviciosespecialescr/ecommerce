@@ -15,84 +15,81 @@ export function ProductCard({ product }: ProductCardProps) {
   const handleInterested = () => {
     const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || ''
     if (!phoneNumber) return alert('Número de WhatsApp no configurado')
-
     const message = encodeURIComponent(`Hola, estoy interesado en este artículo:\n*${product.name}*\nPrecio: ₡${product.price.toLocaleString()}\n\n¿Me pueden dar más información?`)
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank')
   }
 
   return (
-    <div className="group flex flex-col h-full border border-transparent hover:border-gray-100 p-2 lg:p-4 transition-all duration-300">
+    <div className="group flex flex-col h-full bg-white border border-[#dde8f8] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:shadow-[#007bff]/10 hover:-translate-y-1 transition-all duration-300">
+      
       {/* Image Container */}
-      <Link href={`/productos/${product.id}`} className="relative aspect-[4/5] overflow-hidden bg-gray-50 mb-4 rounded-none block">
+      <Link href={`/productos/${product.id}`} className="relative block overflow-hidden aspect-[4/3] bg-[#f8faff]">
         {product.image_url ? (
-          <img 
-            src={product.image_url} 
-            alt={product.name} 
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x500?text=Sin+Imagen'
-            }}
+          <img
+            src={product.image_url}
+            alt={product.name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+            onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x300?text=Sin+Imagen' }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-300 text-sm">Sin Fotografía</div>
         )}
-        
+
         {/* Tags */}
-        <div className="absolute top-4 left-4 flex flex-col gap-2">
+        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
           {product.stock <= 0 && (
-            <span className="text-[10px] uppercase tracking-widest font-bold text-white bg-black px-3 py-1">
+            <span className="text-[10px] uppercase tracking-widest font-bold text-white bg-red-500 px-3 py-1 rounded-full">
               Agotado
             </span>
           )}
           {product.stock > 0 && product.stock <= 5 && (
-            <span className="text-[10px] uppercase tracking-widest font-bold text-black bg-white/90 backdrop-blur px-3 py-1 border border-black/10">
+            <span className="text-[10px] uppercase tracking-widest font-bold text-[#007bff] bg-[#e8f3ff] px-3 py-1 rounded-full">
               Poco Stock
             </span>
           )}
         </div>
       </Link>
 
-      {/* Info Content */}
-      <div className="flex flex-col flex-1">
-        <div className="flex justify-between items-start mb-2">
-          <Link href={`/productos/${product.id}`} className="font-medium text-black text-sm pr-4 line-clamp-2 hover:underline">
-            {product.name}
-          </Link>
-          <span className="text-sm text-black font-semibold whitespace-nowrap">
-            ₡{product.price.toLocaleString()}
-          </span>
-        </div>
-        
-        <p className="text-gray-400 text-xs mb-3">{product.category}</p>
+      {/* Info */}
+      <div className="flex flex-col flex-1 p-4">
+        <p className="text-[11px] text-[#007bff] font-semibold uppercase tracking-widest mb-1">{product.category}</p>
+
+        <Link href={`/productos/${product.id}`} className="font-bold text-[#1a1a2e] text-sm mb-1 line-clamp-2 hover:text-[#007bff] transition-colors">
+          {product.name}
+        </Link>
 
         {product.description && (
-          <p className="text-gray-500 text-xs line-clamp-2 font-light leading-relaxed mb-4">
+          <p className="text-gray-400 text-xs line-clamp-2 font-light leading-relaxed mb-2">
             {product.description}
           </p>
         )}
-        
-        {/* Push buttons to bottom */}
-        <div className="mt-auto pt-4 flex flex-col gap-2">
-          <button
-            onClick={() => addItem(product)}
-            disabled={product.stock <= 0}
-            className={`w-full py-3.5 text-xs tracking-widest uppercase font-semibold transition-colors rounded-none ${
-              product.stock <= 0 
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-100' 
-                : 'bg-black text-white hover:bg-gray-800'
-            }`}
-          >
-            {product.stock <= 0 ? 'Sin stock' : 'Agregar'}
-          </button>
-          
-          <button
-            onClick={handleInterested}
-            className="w-full py-3.5 text-xs tracking-widest uppercase font-semibold transition-all rounded-none flex items-center justify-center gap-2 text-white hover:brightness-110"
-            style={{ backgroundColor: '#007bff' }}
-          >
-            <MessageCircle className="w-4 h-4" />
-            Pedir por WhatsApp
-          </button>
+
+        <div className="mt-auto pt-3 border-t border-[#f0f5ff]">
+          <p className="text-[#1a1a2e] font-extrabold text-lg mb-3">₡{product.price.toLocaleString()}</p>
+
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={() => addItem(product)}
+              disabled={product.stock <= 0}
+              className={`w-full py-3 text-xs tracking-wider uppercase font-bold rounded-xl transition-all ${
+                product.stock <= 0
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  : 'text-white hover:brightness-110 shadow-sm'
+              }`}
+              style={product.stock > 0 ? { backgroundColor: '#007bff' } : {}}
+            >
+              {product.stock <= 0 ? 'Sin stock' : 'Agregar al carrito'}
+            </button>
+
+            <button
+              onClick={handleInterested}
+              className="w-full py-3 text-xs tracking-wider uppercase font-bold rounded-xl border-2 transition-all hover:bg-[#e8f3ff] flex items-center justify-center gap-2"
+              style={{ borderColor: '#007bff', color: '#007bff' }}
+            >
+              <MessageCircle className="w-3.5 h-3.5" />
+              Pedir por WhatsApp
+            </button>
+          </div>
         </div>
       </div>
     </div>

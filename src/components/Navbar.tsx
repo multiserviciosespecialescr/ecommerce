@@ -12,7 +12,7 @@ export function Navbar() {
   if (pathname.startsWith('/admin')) return null
 
   return (
-    <nav className="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-xl border-b border-gray-100">
+    <nav className="sticky top-0 z-40 w-full bg-white/90 backdrop-blur-xl border-b border-[#dde8f8] shadow-sm">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo Section */}
@@ -36,7 +36,7 @@ export function Navbar() {
           <div className="flex items-center gap-8">
             <Link 
               href="/productos" 
-              className="hidden sm:block text-sm font-medium text-gray-500 hover:text-black transition-colors"
+              className="hidden sm:block text-sm font-semibold text-gray-500 hover:text-[#007bff] transition-colors"
             >
               Catálogo
             </Link>
@@ -47,7 +47,7 @@ export function Navbar() {
             >
               <ShoppingBag className="w-5 h-5 transition-transform group-hover:scale-105 stroke-[1.5px]" />
               {totalItems > 0 && (
-                <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white bg-black rounded-full shadow-sm">
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white rounded-full shadow-sm" style={{ backgroundColor: '#007bff' }}>
                   {totalItems}
                 </span>
               )}

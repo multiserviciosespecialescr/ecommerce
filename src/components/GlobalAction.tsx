@@ -22,12 +22,12 @@ export function GlobalAction() {
   return (
     <button
       onClick={handleGeneralQuestion}
-      className="fixed bottom-6 right-6 z-30 text-white px-5 py-3.5 rounded-full font-semibold shadow-xl flex items-center gap-2.5 transform transition-all hover:scale-105 active:scale-95 hover:brightness-110"
-      style={{ backgroundColor: '#007bff', boxShadow: '0 8px 30px rgba(0,123,255,0.35)' }}
+      className="btn-pulse fixed bottom-6 right-6 z-30 text-white px-5 py-3.5 rounded-full font-bold text-sm shadow-xl flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 hover:brightness-110"
+      style={{ backgroundColor: '#007bff' }}
     >
       <MessageCircle className="w-5 h-5 flex-shrink-0" />
-      <span className="hidden sm:inline text-sm">Pide lo que no ves en la tienda</span>
-      <span className="sm:hidden text-sm">Pedir</span>
+      <span className="hidden sm:inline">Pide lo que no ves en la tienda</span>
+      <span className="sm:hidden">Pedir</span>
     </button>
   )
 }

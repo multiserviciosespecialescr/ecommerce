@@ -4,13 +4,16 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --color-brand: #007bff;
   --color-brand-dark: #0062cc;
-  --color-brand-light: #e8f2ff;
-  --color-bg: #fafafa;
+  --color-brand-light: #e8f3ff;
+  --color-bg: #f8faff;
 }
 
 :root {
-  --background: #fafafa;
-  --foreground: #111827;
+  --brand: #007bff;
+  --brand-dark: #0062cc;
+  --brand-light: #e8f3ff;
+  --background: #f8faff;
+  --foreground: #1a1a2e;
 }
 
 body {
@@ -20,14 +23,18 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Ocultar barra de desplazamiento manteniendo funcionalidad (opcional pero elegante) */
-::-webkit-scrollbar {
-  width: 8px;
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background-color: #c7ddf9; border-radius: 20px; }
+
+/* Slider */
+input[type="range"] { accent-color: #007bff; }
+
+/* Pulse animation for floating button */
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4); }
+  70% { box-shadow: 0 0 0 12px rgba(0, 123, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
 }
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background-color: #e5e7eb;
-  border-radius: 20px;
-}
+.btn-pulse { animation: pulse-ring 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite; }

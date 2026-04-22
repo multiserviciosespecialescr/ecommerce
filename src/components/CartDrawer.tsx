@@ -90,14 +90,14 @@ export function CartDrawer() {
                 <div className="flex-1 flex flex-col justify-between">
                   <div>
                     <h3 className="font-medium text-gray-900 line-clamp-1">{item.name}</h3>
-                    <p className="text-indigo-600 font-semibold">₡{item.price.toLocaleString()}</p>
+                    <p className="font-bold" style={{ color: '#007bff' }}>₡{item.price.toLocaleString()}</p>
                   </div>
                   
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 bg-white border rounded-lg px-2 py-1">
                       <button 
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="text-gray-500 hover:text-indigo-600 transition-colors"
+                        className="transition-colors hover:text-[#007bff] text-gray-500"
                       >
                         <Minus className="w-4 h-4" />
                       </button>
@@ -105,7 +105,7 @@ export function CartDrawer() {
                       <button 
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
                         disabled={item.quantity >= item.stock}
-                        className={`transition-colors ${item.quantity >= item.stock ? 'text-gray-300 cursor-not-allowed' : 'text-gray-500 hover:text-indigo-600'}`}
+                        className={`transition-colors ${item.quantity >= item.stock ? 'text-gray-300 cursor-not-allowed' : 'text-gray-500 hover:text-[#007bff]'}`}
                       >
                         <Plus className="w-4 h-4" />
                       </button>
