@@ -150,8 +150,8 @@ export default function AdminPage() {
         {/* Sidebar Nav */}
         <aside className="w-full md:w-64 bg-white border-r border-gray-200 flex flex-col">
           <div className="p-6 border-b border-gray-100 flex items-center justify-between md:justify-start gap-4">
-            <div className="w-8 h-8 bg-black text-white flex items-center justify-center font-bold text-xs">LB</div>
-            <span className="font-semibold text-lg tracking-tight">Lo Buscamos</span>
+            <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain" />
+            <span className="font-semibold text-lg tracking-tight text-black">Lo Buscamos</span>
           </div>
           <nav className="p-4 flex-1">
             <ul className="space-y-1">

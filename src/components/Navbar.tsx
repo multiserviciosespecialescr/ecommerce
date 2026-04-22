@@ -17,12 +17,19 @@ export function Navbar() {
         <div className="flex justify-between items-center h-20">
           {/* Logo Section */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center transition-transform group-hover:scale-95">
-              <span className="text-white font-medium text-xs leading-none">LB</span>
+            <img 
+              src="/logo.png" 
+              alt="Lo Buscamos Logo" 
+              className="h-11 w-auto object-contain rounded-xl transition-transform group-hover:scale-105 border border-gray-100 shadow-sm"
+            />
+            <div className="flex flex-col">
+              <span className="font-bold text-lg tracking-tighter text-gray-900 leading-tight lowercase">
+                lobuscamos.com
+              </span>
+              <span className="text-[9px] text-gray-400 font-bold tracking-widest uppercase leading-none mt-0.5">
+                TODO LO QUE BUSCAS, EN UN SOLO LUGAR
+              </span>
             </div>
-            <span className="font-semibold text-xl tracking-tight text-gray-900">
-              Lo Buscamos
-            </span>
           </Link>
 
           {/* Actions */}

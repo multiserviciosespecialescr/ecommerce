@@ -11,6 +11,9 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Lo Buscamos - Catálogo',
   description: 'Catálogo de productos con integración a WhatsApp',
+  icons: {
+    icon: '/logo.png',
+  },
 }
 
 export default function RootLayout({
