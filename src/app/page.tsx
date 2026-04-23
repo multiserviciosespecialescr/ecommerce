@@ -1,7 +1,7 @@
 "use client"
 
 import Link from 'next/link'
-import { Search, MessageCircle } from 'lucide-react'
+import { ShoppingCart, MessageCircle, CheckCircle, Sparkles, Send, Search } from 'lucide-react'
 
 export default function Home() {
   const handleCustomQuote = () => {
@@ -12,7 +12,7 @@ export default function Home() {
   }
 
   return (
-    <div className="w-full bg-[#f8faff]">
+    <div className="w-full bg-white">
 
       {/* ─── HERO ─── */}
       <section className="relative overflow-hidden min-h-[92vh] flex items-center justify-center">
@@ -41,7 +41,7 @@ export default function Home() {
 
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/30 rounded-full px-4 py-1.5 text-white/90 text-xs font-semibold tracking-widest uppercase mb-8">
-            ✦ Catálogo de Todo Tipo de Productos
+            <Sparkles className="w-3 h-3" /> Catálogo de Todo Tipo de Productos
           </div>
 
           {/* Título */}
@@ -74,9 +74,9 @@ export default function Home() {
 
           {/* Trust badges */}
           <div className="flex flex-wrap items-center justify-center gap-6 mt-12 text-white/60 text-xs font-medium">
-            <span>✓ Sin registro necesario</span>
-            <span>✓ Pedidos personalizados</span>
-            <span>✓ Cotización inmediata por WhatsApp</span>
+            <span className="flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5" /> Sin registro necesario</span>
+            <span className="flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5" /> Pedidos personalizados</span>
+            <span className="flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5" /> Cotización inmediata por WhatsApp</span>
           </div>
         </div>
       </section>
@@ -92,13 +92,13 @@ export default function Home() {
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { num: '01', title: 'Explora', icon: '🛍️', desc: 'Navega el catálogo y añade lo que quieras al carrito. Sin registro previo.' },
-              { num: '02', title: 'Finaliza', icon: '📲', desc: 'Tu pedido se envía a nuestro WhatsApp como un resumen claro y detallado.' },
-              { num: '03', title: 'Solicita', icon: '💬', desc: '¿No encuentras algo? Escríbenos y cotizamos cualquier producto al instante.' },
+              { num: '01', title: 'Explora', Icon: ShoppingCart, desc: 'Navega el catálogo y añade lo que quieras al carrito. Sin registro previo.' },
+              { num: '02', title: 'Finaliza', Icon: Send, desc: 'Tu pedido se envía a nuestro WhatsApp como un resumen claro y detallado.' },
+              { num: '03', title: 'Solicita', Icon: MessageCircle, desc: '¿No encuentras algo? Escríbenos y cotizamos cualquier producto al instante.' },
             ].map((step) => (
-              <div key={step.num} className="bg-[#f8faff] border border-[#dde8f8] rounded-2xl p-8 hover:shadow-md hover:shadow-[#007bff]/10 transition-all">
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl mb-6" style={{ backgroundColor: '#e8f3ff' }}>
-                  {step.icon}
+              <div key={step.num} className="bg-white border border-[#dde8f8] rounded-2xl p-8 hover:shadow-md hover:shadow-[#007bff]/10 transition-all">
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-6" style={{ backgroundColor: '#e8f3ff' }}>
+                  <step.Icon className="w-6 h-6" style={{ color: '#007bff' }} />
                 </div>
                 <span className="text-[#007bff] text-xs font-bold tracking-widest">{step.num}</span>
                 <h3 className="text-xl font-bold text-[#1a1a2e] mt-1 mb-3">{step.title}</h3>
@@ -110,7 +110,7 @@ export default function Home() {
       </section>
 
       {/* ─── CTA FINAL ─── */}
-      <section className="py-24 px-6 bg-[#f8faff] border-t border-[#dde8f8]">
+      <section className="py-24 px-6 bg-white border-t border-[#dde8f8]">
         <div className="max-w-4xl mx-auto text-center">
           <div className="bg-gradient-to-br from-[#007bff] to-[#0062cc] rounded-3xl px-10 py-16 shadow-xl shadow-[#007bff]/30">
             <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-6">

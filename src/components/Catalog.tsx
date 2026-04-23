@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import { Product } from '@/lib/supabase'
 import { ProductCard } from './ProductCard'
-import { Search, Filter, AlertCircle, SlidersHorizontal } from 'lucide-react'
+import { Search, Filter, AlertCircle, Package } from 'lucide-react'
 import { CATEGORIES } from '@/lib/constants'
 
 interface CatalogProps {
@@ -48,7 +48,9 @@ export function Catalog({ initialProducts, dbError }: CatalogProps) {
   if (initialProducts.length === 0) {
     return (
       <div className="py-32 text-center flex flex-col items-center">
-        <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mb-6" style={{ backgroundColor: '#e8f3ff' }}>📦</div>
+        <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6" style={{ backgroundColor: '#e8f3ff' }}>
+          <Package className="w-7 h-7" style={{ color: '#007bff' }} />
+        </div>
         <h3 className="text-2xl font-bold text-[#1a1a2e] mb-3">Catálogo vacío</h3>
         <p className="text-gray-500 text-sm">No hay artículos disponibles por el momento.</p>
       </div>
