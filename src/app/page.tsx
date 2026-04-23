@@ -33,8 +33,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Overlay gradiente azul/blanco */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#007bff]/75 via-[#004fa3]/60 to-[#003080]/80" />
+        {/* Overlay oscuro neutro — preserva colores naturales de las fotos */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/55 to-black/75" />
 
         {/* Contenido centrado */}
         <div className="relative z-10 text-center px-6 max-w-3xl mx-auto">
