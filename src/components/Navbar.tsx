@@ -22,7 +22,7 @@ export function Navbar() {
               alt="Lo Buscamos Logo" 
               className="h-11 w-auto object-contain rounded-xl transition-transform group-hover:scale-105 border border-gray-100 shadow-sm"
             />
-            <div className="flex flex-col">
+            <div className="hidden sm:flex flex-col">
               <span className="font-bold text-lg tracking-tighter text-gray-900 leading-tight lowercase">
                 lobuscamos.com
               </span>
