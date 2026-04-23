@@ -47,7 +47,7 @@ export default function Home() {
           {/* Título */}
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] tracking-tight mb-6 drop-shadow-lg">
             Todo lo que buscas,<br/>
-            <span className="text-[#a8d4ff]">en un solo lugar.</span>
+            <span className="text-[#007bff]">en un solo lugar.</span>
           </h1>
 
           {/* Subtítulo */}
