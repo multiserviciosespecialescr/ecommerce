@@ -151,7 +151,7 @@ export default function AdminPage() {
         <aside className="w-full md:w-64 bg-white border-r border-gray-200 flex flex-col">
           <div className="p-6 border-b border-gray-100 flex items-center justify-between md:justify-start gap-4">
             <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain" />
-            <span className="font-semibold text-lg tracking-tight text-black">Lo Buscamos</span>
+            <span className="font-semibold text-lg tracking-tight text-black">Estilos Creativos</span>
           </div>
           <nav className="p-4 flex-1">
             <ul className="space-y-1">
@@ -296,7 +296,7 @@ export default function AdminPage() {
                     <h3 className="text-sm font-bold text-gray-900">1. Información General</h3>
                     <div>
                       <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">Nombre Comercial</label>
-                      <input required type="text" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full border border-gray-200 bg-gray-50 rounded-lg px-4 py-3 focus:ring-2 focus:ring-black outline-none transition-all text-sm font-medium text-gray-900" placeholder="Ej. Zapatillas Nike Air" />
+                      <input required type="text" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full border border-gray-200 bg-gray-50 rounded-lg px-4 py-3 focus:ring-2 focus:ring-black outline-none transition-all text-sm font-medium text-gray-900" placeholder="Ej. Taza Personalizada con Foto" />
                     </div>
                     
                     <div className="grid grid-cols-2 gap-4">

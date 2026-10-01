@@ -14,7 +14,7 @@ export function ProductClientRenderer({ product }: { product: Product }) {
     const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || ''
     if (!phoneNumber) return alert('Número de WhatsApp no configurado')
 
-    const message = encodeURIComponent(`Hola, estoy interesado en este artículo:\n*${product.name}*\nPrecio: ₡${product.price.toLocaleString()}\n\n¿Me pueden dar más información?`)
+    const message = encodeURIComponent(`Hola, estoy interesado en este producto de Estilos Creativos:\n*${product.name}*\nPrecio: ₡${product.price.toLocaleString()}\n\n¿Me pueden dar más información sobre opciones de personalización?`)
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank')
   }
 
@@ -24,7 +24,7 @@ export function ProductClientRenderer({ product }: { product: Product }) {
       {/* Columna Izquierda: Galería de Imágenes */}
       <div className="w-full lg:w-1/2 flex flex-col gap-4">
         {/* Imagen Principal */}
-        <div className="relative aspect-[4/5] bg-[#f8faff] flex items-center justify-center border border-[#dde8f8] rounded-2xl overflow-hidden">
+        <div className="relative aspect-[4/5] bg-[#f8fafb] flex items-center justify-center border border-[#d5e5ec] rounded-2xl overflow-hidden">
           {displayImages[activeImageIndex] ? (
             <img 
               src={displayImages[activeImageIndex]} 
@@ -51,8 +51,8 @@ export function ProductClientRenderer({ product }: { product: Product }) {
               <button 
                 key={idx}
                 onClick={() => setActiveImageIndex(idx)}
-                className={`relative flex-shrink-0 w-24 aspect-[4/5] bg-[#f8faff] border snap-center transition-all rounded-xl overflow-hidden ${
-                  idx === activeImageIndex ? 'border-[#007bff] ring-2 ring-[#007bff]/30' : 'border-[#dde8f8] hover:border-[#007bff]/50'
+                className={`relative flex-shrink-0 w-24 aspect-[4/5] bg-[#f8fafb] border snap-center transition-all rounded-xl overflow-hidden ${
+                  idx === activeImageIndex ? 'border-[#0d3b4f] ring-2 ring-[#0d3b4f]/30' : 'border-[#d5e5ec] hover:border-[#0d3b4f]/50'
                 }`}
               >
                 <img src={img} alt={`Vista ${idx + 1}`} className={`w-full h-full object-cover ${idx !== activeImageIndex ? 'opacity-70 hover:opacity-100' : ''}`} />
@@ -65,16 +65,16 @@ export function ProductClientRenderer({ product }: { product: Product }) {
       {/* Columna Derecha: Detalles */}
       <div className="w-full lg:w-1/2 flex flex-col justify-start pt-4 lg:pt-10">
         <div className="mb-2">
-          <span className="text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+          <span className="text-[10px] font-bold tracking-widest text-[#2abfbf] uppercase">
             {product.category}
           </span>
         </div>
         
-        <h1 className="text-3xl lg:text-5xl font-bold text-black tracking-tighter mb-4 leading-none">
+        <h1 className="text-3xl lg:text-5xl font-bold text-[#0d3b4f] tracking-tighter mb-4 leading-none">
           {product.name}
         </h1>
         
-        <div className="text-xl lg:text-2xl font-semibold text-black mb-10">
+        <div className="text-xl lg:text-2xl font-semibold text-[#0d3b4f] mb-10">
           ₡{product.price.toLocaleString()}
         </div>
         
@@ -87,9 +87,9 @@ export function ProductClientRenderer({ product }: { product: Product }) {
           </div>
         )}
 
-        <div className="mb-12 flex items-center text-sm border border-gray-100 p-4">
+        <div className="mb-12 flex items-center text-sm border border-[#d5e5ec] p-4 rounded-xl">
           <span className="w-32 text-gray-400 font-bold text-[10px] uppercase tracking-widest">Disponibilidad</span>
-          <span className={`font-semibold text-xs tracking-widest uppercase ${product.stock > 10 ? 'text-black' : product.stock > 0 ? 'text-orange-600' : 'text-red-600'}`}>
+          <span className={`font-semibold text-xs tracking-widest uppercase ${product.stock > 10 ? 'text-[#0d3b4f]' : product.stock > 0 ? 'text-orange-600' : 'text-red-600'}`}>
             {product.stock <= 0 ? 'Sin inventario' : `${product.stock} unidades en almacén`}
           </span>
         </div>
@@ -104,7 +104,7 @@ export function ProductClientRenderer({ product }: { product: Product }) {
                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
                 : 'text-white hover:brightness-110'
             }`}
-            style={product.stock > 0 ? { backgroundColor: '#007bff' } : {}}
+            style={product.stock > 0 ? { backgroundColor: '#0d3b4f' } : {}}
           >
             <ShoppingBag className="w-4 h-4" />
             {product.stock <= 0 ? 'Agotado' : 'Añadir a la Bolsa'}
@@ -112,11 +112,11 @@ export function ProductClientRenderer({ product }: { product: Product }) {
           
           <button
             onClick={handleInterested}
-            className="flex-1 py-4 text-xs tracking-widest uppercase font-bold rounded-xl border-2 transition-all hover:bg-[#e8f3ff] flex items-center justify-center gap-3"
-            style={{ borderColor: '#007bff', color: '#007bff' }}
+            className="flex-1 py-4 text-xs tracking-widest uppercase font-bold rounded-xl border-2 transition-all hover:bg-[#e6f2f7] flex items-center justify-center gap-3"
+            style={{ borderColor: '#0d3b4f', color: '#0d3b4f' }}
           >
             <MessageCircle className="w-4 h-4" />
-            Pedir o Consultar
+            Personalizar
           </button>
         </div>
       </div>

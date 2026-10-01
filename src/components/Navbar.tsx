@@ -12,22 +12,22 @@ export function Navbar() {
   if (pathname.startsWith('/admin')) return null
 
   return (
-    <nav className="sticky top-0 z-40 w-full bg-white/90 backdrop-blur-xl border-b border-[#dde8f8] shadow-sm">
+    <nav className="sticky top-0 z-40 w-full bg-white/90 backdrop-blur-xl border-b border-[#d5e5ec] shadow-sm">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo Section */}
           <Link href="/" className="flex items-center gap-3 group">
             <img 
               src="/logo.png" 
-              alt="Lo Buscamos Logo" 
-              className="h-11 w-auto object-contain rounded-xl transition-transform group-hover:scale-105 border border-gray-100 shadow-sm"
+              alt="Estilos Creativos Logo" 
+              className="h-12 w-auto object-contain transition-transform group-hover:scale-105"
             />
             <div className="hidden sm:flex flex-col">
-              <span className="font-bold text-lg tracking-tighter text-gray-900 leading-tight lowercase">
-                lobuscamos.com
+              <span className="font-bold text-lg tracking-tight text-[#0d3b4f] leading-tight">
+                Estilos Creativos
               </span>
               <span className="text-[9px] text-gray-400 font-bold tracking-widest uppercase leading-none mt-0.5">
-                TODO LO QUE BUSCAS, EN UN SOLO LUGAR
+                PRODUCTOS PERSONALIZADOS
               </span>
             </div>
           </Link>
@@ -36,7 +36,7 @@ export function Navbar() {
           <div className="flex items-center gap-8">
             <Link 
               href="/productos" 
-              className="hidden sm:block text-sm font-semibold text-gray-500 hover:text-[#007bff] transition-colors"
+              className="hidden sm:block text-sm font-semibold text-gray-500 hover:text-[#0d3b4f] transition-colors"
             >
               Catálogo
             </Link>
@@ -47,7 +47,7 @@ export function Navbar() {
             >
               <ShoppingBag className="w-5 h-5 transition-transform group-hover:scale-105 stroke-[1.5px]" />
               {totalItems > 0 && (
-                <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white rounded-full shadow-sm" style={{ backgroundColor: '#007bff' }}>
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold text-white rounded-full shadow-sm" style={{ backgroundColor: '#0d3b4f' }}>
                   {totalItems}
                 </span>
               )}

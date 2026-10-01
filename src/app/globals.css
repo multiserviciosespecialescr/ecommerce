@@ -1,17 +1,21 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --color-brand: #007bff;
-  --color-brand-dark: #0062cc;
-  --color-brand-light: #e8f3ff;
-  --color-bg: #f8faff;
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --color-brand: #0d3b4f;
+  --color-brand-dark: #092a38;
+  --color-brand-light: #e6f2f7;
+  --color-accent: #2abfbf;
+  --color-accent-warm: #f5a623;
+  --color-bg: #f8fafb;
 }
 
 :root {
-  --brand: #007bff;
-  --brand-dark: #0062cc;
-  --brand-light: #e8f3ff;
+  --brand: #0d3b4f;
+  --brand-dark: #092a38;
+  --brand-light: #e6f2f7;
+  --accent: #2abfbf;
+  --accent-warm: #f5a623;
   --background: #ffffff;
   --foreground: #1a1a2e;
 }
@@ -26,15 +30,41 @@ body {
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background-color: #c7ddf9; border-radius: 20px; }
+::-webkit-scrollbar-thumb { background-color: #b0d4e3; border-radius: 20px; }
 
 /* Slider */
-input[type="range"] { accent-color: #007bff; }
+input[type="range"] { accent-color: #0d3b4f; }
 
 /* Pulse animation for floating button */
 @keyframes pulse-ring {
-  0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4); }
-  70% { box-shadow: 0 0 0 12px rgba(0, 123, 255, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(13, 59, 79, 0.4); }
+  70% { box-shadow: 0 0 0 12px rgba(13, 59, 79, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(13, 59, 79, 0); }
 }
 .btn-pulse { animation: pulse-ring 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite; }
+
+/* Smooth gradient text helper */
+.text-gradient {
+  background: linear-gradient(135deg, #2abfbf, #0d3b4f, #f5a623);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Shimmer animation for hero */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer-badge {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* Float animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+.float-anim { animation: float 4s ease-in-out infinite; }

@@ -1,18 +1,24 @@
-# Guía para Agentes de IA: Mantenimiento y Despliegue (E-Commerce WA)
+# Guía para Agentes de IA: Mantenimiento y Despliegue (Estilos Creativos)
 
 **¡Hola, futuro agente de IA (o desarrollador)!** 
-Si estás leyendo esto, el usuario te ha pedido que modifiques o actualices el código de esta tienda en línea. Lee esta guía antes de hacer cambios para mantener la integridad del proyecto.
+Si estás leyendo esto, el usuario te ha pedido que modifiques o actualices el código de esta tienda en línea de productos personalizados. Lee esta guía antes de hacer cambios para mantener la integridad del proyecto.
+
+## Sobre el Negocio
+Estilos Creativos es una tienda de productos personalizados: tazas, camisas, botellas, llaveros, platos, artículos de decoración, y también ofrece alquiler de salones para eventos (coordinado vía WhatsApp). El flujo de compra finaliza por WhatsApp, no hay pasarela de pago integrada.
 
 ## Arquitectura Base
-1. **Framework:** Next.js 14+ (App Router). Ubicación principal del código: `src/app/`.
+1. **Framework:** Next.js (App Router). Ubicación principal del código: `src/app/`.
 2. **Estilos:** Tailwind CSS v4 (`@import "tailwindcss";` está configurado en `globals.css`).
 3. **Base de Datos / Storage:** Supabase. Las peticiones a Supabase se hacen desde el Cliente y el Servidor utilizando el cliente existente en `src/lib/supabase.ts`.
 4. **Estado:** React Context para el carrito (`src/components/CartContext.tsx`) respaldado por `localStorage`.
 5. **Autenticación (Admin):** Extremadamente simple, basada en variable de entorno (`NEXT_PUBLIC_ADMIN_PASSWORD`) verificada visualmente en el frontend. No hay cuentas de usuario.
+6. **Fuente:** Outfit (Google Fonts)
+7. **Paleta:** Azul oscuro/teal `#0d3b4f` (brand), `#2abfbf` (accent), `#f5a623` (warm accent)
 
 ## Reglas Críticas (No romper)
 - **No remover `export const dynamic = 'force-dynamic'`:** Las páginas que leen de la base de datos (como `src/app/productos/page.tsx`) incluyen esta directiva para obligar a Vercel a realizar Fetch del catálogo real en cada visita. Si lo cambias a estático, los clientes no verán los productos nuevos creados desde el `/admin` a menos que se haga un redespliegue de código.
 - **Carrito Local:** El carrito vive enteramente en el cliente y genera un string de WhatsApp para el Checkout. No agregues Endpoints de Stripe ni bases de datos de pedidos a menos que el usuario lo solicite explícitamente en el futuro cambiando todo el modelo de negocio.
+- **Marca:** El nombre de la marca es "Estilos Creativos". El color principal es `#0d3b4f`. NO usar el nombre anterior "Lo Buscamos" ni el color azul `#007bff`.
 
 ## Proceso de Despliegue (Cómo subir cambios a producción)
 

@@ -1,12 +1,9 @@
 export const CATEGORIES = [
-  'Ropa y Moda',
-  'Electrónica',
-  'Accesorios',
-  'Hogar y Jardín',
-  'Salud y Belleza',
-  'Deportes',
-  'Juguetes',
-  'Mascotas',
-  'Alimentos y Bebidas',
+  'Tazas',
+  'Camisas',
+  'Botellas',
+  'Llaveros',
+  'Platos',
+  'Decoración',
   'Otro'
 ]

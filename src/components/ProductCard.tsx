@@ -15,15 +15,15 @@ export function ProductCard({ product }: ProductCardProps) {
   const handleInterested = () => {
     const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || ''
     if (!phoneNumber) return alert('Número de WhatsApp no configurado')
-    const message = encodeURIComponent(`Hola, estoy interesado en este artículo:\n*${product.name}*\nPrecio: ₡${product.price.toLocaleString()}\n\n¿Me pueden dar más información?`)
+    const message = encodeURIComponent(`Hola, estoy interesado en este producto personalizado:\n*${product.name}*\nPrecio: ₡${product.price.toLocaleString()}\n\n¿Me pueden dar más información sobre opciones de personalización?`)
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank')
   }
 
   return (
-    <div className="group flex flex-col h-full bg-white border border-[#dde8f8] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:shadow-[#007bff]/10 hover:-translate-y-1 transition-all duration-300">
+    <div className="group flex flex-col h-full bg-white border border-[#d5e5ec] rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:shadow-[#0d3b4f]/10 hover:-translate-y-1 transition-all duration-300">
       
       {/* Image Container */}
-      <Link href={`/productos/${product.id}`} className="relative block overflow-hidden aspect-[4/3] bg-[#f8faff]">
+      <Link href={`/productos/${product.id}`} className="relative block overflow-hidden aspect-[4/3] bg-[#f8fafb]">
         {product.image_url ? (
           <img
             src={product.image_url}
@@ -43,7 +43,7 @@ export function ProductCard({ product }: ProductCardProps) {
             </span>
           )}
           {product.stock > 0 && product.stock <= 5 && (
-            <span className="text-[10px] uppercase tracking-widest font-bold text-[#007bff] bg-[#e8f3ff] px-3 py-1 rounded-full">
+            <span className="text-[10px] uppercase tracking-widest font-bold text-[#0d3b4f] bg-[#e6f2f7] px-3 py-1 rounded-full">
               Poco Stock
             </span>
           )}
@@ -52,9 +52,9 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Info */}
       <div className="flex flex-col flex-1 p-4">
-        <p className="text-[11px] text-[#007bff] font-semibold uppercase tracking-widest mb-1">{product.category}</p>
+        <p className="text-[11px] text-[#2abfbf] font-semibold uppercase tracking-widest mb-1">{product.category}</p>
 
-        <Link href={`/productos/${product.id}`} className="font-bold text-[#1a1a2e] text-sm mb-1 line-clamp-2 hover:text-[#007bff] transition-colors">
+        <Link href={`/productos/${product.id}`} className="font-bold text-[#0d3b4f] text-sm mb-1 line-clamp-2 hover:text-[#2abfbf] transition-colors">
           {product.name}
         </Link>
 
@@ -64,8 +64,8 @@ export function ProductCard({ product }: ProductCardProps) {
           </p>
         )}
 
-        <div className="mt-auto pt-3 border-t border-[#f0f5ff]">
-          <p className="text-[#1a1a2e] font-extrabold text-lg mb-3">₡{product.price.toLocaleString()}</p>
+        <div className="mt-auto pt-3 border-t border-[#e6f2f7]">
+          <p className="text-[#0d3b4f] font-extrabold text-lg mb-3">₡{product.price.toLocaleString()}</p>
 
           <div className="flex flex-col gap-2">
             <button
@@ -76,18 +76,18 @@ export function ProductCard({ product }: ProductCardProps) {
                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                   : 'text-white hover:brightness-110 shadow-sm'
               }`}
-              style={product.stock > 0 ? { backgroundColor: '#007bff' } : {}}
+              style={product.stock > 0 ? { backgroundColor: '#0d3b4f' } : {}}
             >
               {product.stock <= 0 ? 'Sin stock' : 'Agregar al carrito'}
             </button>
 
             <button
               onClick={handleInterested}
-              className="w-full py-3 text-xs tracking-wider uppercase font-bold rounded-xl border-2 transition-all hover:bg-[#e8f3ff] flex items-center justify-center gap-2"
-              style={{ borderColor: '#007bff', color: '#007bff' }}
+              className="w-full py-3 text-xs tracking-wider uppercase font-bold rounded-xl border-2 transition-all hover:bg-[#e6f2f7] flex items-center justify-center gap-2"
+              style={{ borderColor: '#0d3b4f', color: '#0d3b4f' }}
             >
               <MessageCircle className="w-3.5 h-3.5" />
-              Pedir por WhatsApp
+              Consultar por WhatsApp
             </button>
           </div>
         </div>

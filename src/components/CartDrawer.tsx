@@ -21,14 +21,14 @@ export function CartDrawer() {
       return
     }
 
-    let message = "👋 ¡Hola! Me gustaría hacer un pedido:\n\n"
+    let message = "👋 ¡Hola! Me gustaría hacer un pedido de Estilos Creativos:\n\n"
     
     items.forEach(item => {
       message += `- ${item.name} (x${item.quantity}) - ₡${(item.price * item.quantity).toLocaleString()}\n`
     })
     
     message += `\n💰 *Total estimado: ₡${totalPrice.toLocaleString()}*\n\n`
-    message += "Quedo a la espera para coordinar el pago y envío. ¡Gracias!"
+    message += "Quedo a la espera para coordinar personalización, pago y envío. ¡Gracias!"
 
     const encodedMessage = encodeURIComponent(message)
     window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank')
@@ -61,7 +61,7 @@ export function CartDrawer() {
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-2">
-            <ShoppingBag className="w-5 h-5 text-indigo-600" />
+            <ShoppingBag className="w-5 h-5 text-[#0d3b4f]" />
             <h2 className="text-lg font-bold text-gray-900">Tu Pedido</h2>
           </div>
           <button 
@@ -90,14 +90,14 @@ export function CartDrawer() {
                 <div className="flex-1 flex flex-col justify-between">
                   <div>
                     <h3 className="font-medium text-gray-900 line-clamp-1">{item.name}</h3>
-                    <p className="font-bold" style={{ color: '#007bff' }}>₡{item.price.toLocaleString()}</p>
+                    <p className="font-bold" style={{ color: '#0d3b4f' }}>₡{item.price.toLocaleString()}</p>
                   </div>
                   
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3 bg-white border rounded-lg px-2 py-1">
                       <button 
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="transition-colors hover:text-[#007bff] text-gray-500"
+                        className="transition-colors hover:text-[#0d3b4f] text-gray-500"
                       >
                         <Minus className="w-4 h-4" />
                       </button>
@@ -105,7 +105,7 @@ export function CartDrawer() {
                       <button 
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
                         disabled={item.quantity >= item.stock}
-                        className={`transition-colors ${item.quantity >= item.stock ? 'text-gray-300 cursor-not-allowed' : 'text-gray-500 hover:text-[#007bff]'}`}
+                        className={`transition-colors ${item.quantity >= item.stock ? 'text-gray-300 cursor-not-allowed' : 'text-gray-500 hover:text-[#0d3b4f]'}`}
                       >
                         <Plus className="w-4 h-4" />
                       </button>

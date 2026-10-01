@@ -15,7 +15,7 @@ export function GlobalAction() {
       alert('Número no configurado en entorno')
       return
     }
-    const msg = encodeURIComponent('Hola, quiero pedir un producto personalizado que no encuentro en el catálogo:\n\n- Producto que busco:\n- Presupuesto aproximado:\n\n¡Gracias!')
+    const msg = encodeURIComponent('Hola, me gustaría cotizar un producto personalizado:\n\n- Tipo de producto (taza, camisa, botella, etc.):\n- Diseño o idea:\n- Cantidad:\n\n¡Gracias!')
     window.open(`https://wa.me/${phoneNumber}?text=${msg}`, '_blank')
   }
 
@@ -23,11 +23,11 @@ export function GlobalAction() {
     <button
       onClick={handleGeneralQuestion}
       className="btn-pulse fixed bottom-6 right-6 z-30 text-white px-5 py-3.5 rounded-full font-bold text-sm shadow-xl flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 hover:brightness-110"
-      style={{ backgroundColor: '#007bff' }}
+      style={{ backgroundColor: '#0d3b4f' }}
     >
       <MessageCircle className="w-5 h-5 flex-shrink-0" />
-      <span className="hidden sm:inline">Pide lo que no ves en la tienda</span>
-      <span className="sm:hidden">Pedir</span>
+      <span className="hidden sm:inline">Cotiza tu producto</span>
+      <span className="sm:hidden">Cotizar</span>
     </button>
   )
 }
