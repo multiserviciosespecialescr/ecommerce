@@ -1,7 +1,10 @@
 "use client"
 
 import Link from 'next/link'
-import { ShoppingCart, MessageCircle, CheckCircle, Sparkles, Send, Palette, Gift, Heart } from 'lucide-react'
+import { 
+  ShoppingCart, MessageCircle, CheckCircle, Sparkles, Send, Palette, Gift, Heart,
+  Coffee, Shirt, Wine, KeyRound, UtensilsCrossed, Frame
+} from 'lucide-react'
 
 export default function Home() {
   const handleCustomQuote = () => {
@@ -81,7 +84,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── PRODUCTOS DESTACADOS ─── */}
+      {/* ─── PRODUCTOS DESTACADOS / LO QUE HACEMOS ─── */}
       <section className="py-24 px-6 lg:px-8 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
@@ -92,15 +95,17 @@ export default function Home() {
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             {[
-              { emoji: '☕', title: 'Tazas', desc: 'Con tu foto, frase o logo favorito' },
-              { emoji: '👕', title: 'Camisas', desc: 'Diseños únicos para equipos, eventos o marca personal' },
-              { emoji: '🍶', title: 'Botellas', desc: 'Termos y botellas grabadas o impresas' },
-              { emoji: '🔑', title: 'Llaveros', desc: 'Acrílico, metal o resina personalizados' },
-              { emoji: '🍽️', title: 'Platos', desc: 'Decorativos o funcionales con diseños exclusivos' },
-              { emoji: '🎨', title: 'Decoración', desc: 'Cuadros, letreros, adornos y más' },
+              { Icon: Coffee, title: 'Tazas', desc: 'Con tu foto, frase o logo favorito' },
+              { Icon: Shirt, title: 'Camisas', desc: 'Diseños únicos para equipos, eventos o marca personal' },
+              { Icon: Wine, title: 'Botellas', desc: 'Termos y botellas grabadas o impresas' },
+              { Icon: KeyRound, title: 'Llaveros', desc: 'Acrílico, metal o resina personalizados' },
+              { Icon: UtensilsCrossed, title: 'Platos', desc: 'Decorativos o funcionales con diseños exclusivos' },
+              { Icon: Frame, title: 'Decoración', desc: 'Cuadros, letreros, adornos y más' },
             ].map((item) => (
-              <div key={item.title} className="group bg-white border border-[#d5e5ec] rounded-2xl p-6 hover:shadow-lg hover:shadow-[#0d3b4f]/8 hover:-translate-y-1 transition-all duration-300 text-center">
-                <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">{item.emoji}</div>
+              <div key={item.title} className="group bg-white border border-[#d5e5ec] rounded-2xl p-6 hover:shadow-lg hover:shadow-[#0d3b4f]/8 hover:-translate-y-1 transition-all duration-300 text-center flex flex-col items-center">
+                <div className="w-16 h-16 rounded-2xl bg-[#e6f2f7] flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-[#2abfbf] transition-all duration-300">
+                  <item.Icon className="w-8 h-8 text-[#0d3b4f] group-hover:text-white transition-colors duration-300" />
+                </div>
                 <h3 className="text-lg font-bold text-[#0d3b4f] mb-1">{item.title}</h3>
                 <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
               </div>
